@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body { @apply bg-white font-sans text-slate-800 antialiased; }
+  :focus-visible { @apply outline outline-[3px] outline-offset-2 outline-gold; }
+}
+@layer components {
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-extrabold transition-colors disabled:cursor-not-allowed disabled:opacity-50; }
+  .btn-gold { @apply bg-gold text-[#241a00] hover:bg-[#f0b93a]; }
+  .btn-blue { @apply bg-electric text-white hover:bg-[#3f82ff]; }
+  .btn-ghost { @apply border-2 border-[#7f9be0] text-white hover:bg-white/10; }
+  .placeholder-box { background: repeating-linear-gradient(45deg,#f1f3f8 0 12px,#fff 12px 24px); @apply grid place-items-center text-center text-sm font-bold text-slate-500; }
+}

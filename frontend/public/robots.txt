@@ -1,0 +1,9 @@
+# Replace YOURDOMAIN.com with your real domain before going live.
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /account
+Disallow: /checkout
+Disallow: /order/
+
+Sitemap: https://www.YOURDOMAIN.com/sitemap.xml
