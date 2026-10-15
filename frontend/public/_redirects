@@ -1,5 +1,5 @@
 # Netlify rules. Replace YOUR-BACKEND with your Render service name (see docs/FREE_HOSTING.md).
 # The first two lines pass API calls through the website's own address, so customer logins work without a custom domain.
-/api/*        https://YOUR-BACKEND.onrender.com/api/:splat   200
-/sitemap.xml  https://YOUR-BACKEND.onrender.com/sitemap.xml  200
+/api/*        https://https://de-young-musical-city-spot.onrender.com/api/:splat   200
+/sitemap.xml  https://https://de-young-musical-city-spot.onrender.com/sitemap.xml  200
 /*            /index.html                                    200
