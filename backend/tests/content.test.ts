@@ -39,6 +39,10 @@ describe("settings", () => {
     expect(normalizeSetting("whatsapp_number", "+234 810 009 0843")).toBe("2348100090843");
     expect(() => normalizeSetting("whatsapp_number", "12")).toThrow();
   });
+  it("accepts image addresses for studio photos and rejects anything else", () => {
+    expect(normalizeSetting("studio_photo_home", "https://res.cloudinary.com/x/a.jpg")).toBe("https://res.cloudinary.com/x/a.jpg");
+    expect(() => normalizeSetting("studio_photo_home", "javascript:alert(1)")).toThrow();
+  });
   it("empties delete, unknown keys and bad links are rejected", () => {
     expect(normalizeSetting("address", "   ")).toBeNull();
     expect(() => normalizeSetting("jwt_secret", "x")).toThrow();

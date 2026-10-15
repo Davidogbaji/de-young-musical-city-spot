@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
+import ServicePhoto from "../components/ServicePhoto";
 import { BUSINESS, SITE_URL } from "../config";
 import { useSettings } from "../context/SettingsContext";
 import { useCatalog } from "../hooks/useCatalog";
@@ -11,6 +12,10 @@ import { Banner, Testimonial } from "../types";
 import { STUDIO_ENQUIRY, whatsappLink } from "../utils/format";
 
 const SERVICES = ["Home studio setup", "Professional recording studio setup", "Podcast studio setup", "Church audio system setup", "DJ and event sound setup", "Studio equipment consultation"];
+const HOME_PHOTO: Record<string, string> = {
+  "Home studio setup": "studio_photo_home", "Professional recording studio setup": "studio_photo_professional", "Podcast studio setup": "studio_photo_podcast",
+  "Church audio system setup": "studio_photo_church", "DJ and event sound setup": "studio_photo_dj", "Studio equipment consultation": "studio_photo_acoustic",
+};
 const WHY: [string, string][] = [
   ["Quality equipment", "Instruments and audio gear for stage, church and studio."],
   ["Helpful support", "Ask us on WhatsApp before you buy."],
@@ -81,7 +86,7 @@ export default function Home() {
             {demo && <span className="mr-2 rounded-full bg-gold px-2 py-0.5 text-xs font-bold text-[#241a00]">Demonstration data</span>}
             {demo ? "Replace with real inventory in the admin dashboard." : "Instruments and equipment in stock now."}
           </p>
-          {loading && <div className="rounded-xl border border-dashed border-slate-300 p-10 text-center text-slate-500" role="status">Loading products…</div>}
+          {loading && <div className="rounded-xl border border-dashed border-slate-300 p-10 text-center text-slate-500" role="status">Loading products… The first visit after a quiet period can take up to a minute while the server wakes up.</div>}
           {error && (
             <div className="rounded-xl border border-dashed border-red-300 p-10 text-center" role="alert">
               <p className="mb-3">We could not load products: {error}</p>
@@ -114,7 +119,7 @@ export default function Home() {
               const link = whatsappLink(s === "Studio equipment consultation" ? STUDIO_ENQUIRY : `Hello, I would like to request a quote for: ${s}.`);
               return (
                 <div key={s} className="flex flex-col gap-3 rounded-xl border border-[#28438a] bg-[#10285f] p-4">
-                  <div className="grid aspect-[3/2] place-items-center rounded-lg bg-navy text-sm font-bold text-[#9fb2e6]">Service Photo</div>
+                  <ServicePhoto photoKey={HOME_PHOTO[s]} alt={s} dark />
                   <b>{s}</b>
                   {link && <a href={link} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-gold hover:underline">Request a Quote</a>}
                 </div>

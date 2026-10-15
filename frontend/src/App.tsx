@@ -32,6 +32,7 @@ const Unsubscribe = lazy(() => import("./pages/InfoPages").then((m) => ({ defaul
 const Policy = lazy(() => import("./pages/InfoPages").then((m) => ({ default: m.Policy })));
 const AdminEnquiries = lazy(() => import("./admin/Enquiries"));
 const AdminContent = lazy(() => import("./admin/Content"));
+const AdminStudioPhotos = lazy(() => import("./admin/StudioPhotos"));
 const AdminSettings = lazy(() => import("./admin/Settings"));
 const AdminSubscribers = lazy(() => import("./admin/Subscribers"));
 const ComingSoon = lazy(() => import("./pages/ComingSoon"));
@@ -52,6 +53,7 @@ const router = createBrowserRouter([
       { path: "delivery", element: wrap(<AdminDelivery />) },
       { path: "enquiries", element: wrap(<AdminEnquiries />) },
       { path: "content", element: wrap(<AdminContent />) },
+      { path: "studio-photos", element: wrap(<AdminStudioPhotos />) },
       { path: "settings", element: wrap(<AdminSettings />) },
       { path: "subscribers", element: wrap(<AdminSubscribers />) },
     ],

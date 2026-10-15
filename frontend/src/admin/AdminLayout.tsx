@@ -2,7 +2,7 @@ import { NavLink, Outlet, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useSeo } from "../hooks/useSeo";
 
-const LINKS: [string, string][] = [["/admin", "Dashboard"], ["/admin/products", "Products"], ["/admin/orders", "Orders"], ["/admin/catalog", "Categories and brands"], ["/admin/delivery", "Delivery fees"], ["/admin/enquiries", "Studio enquiries"], ["/admin/content", "Banners and testimonials"], ["/admin/settings", "Settings"], ["/admin/subscribers", "Newsletter"]];
+const LINKS: [string, string][] = [["/admin", "Dashboard"], ["/admin/products", "Products"], ["/admin/orders", "Orders"], ["/admin/catalog", "Categories and brands"], ["/admin/delivery", "Delivery fees"], ["/admin/enquiries", "Studio enquiries"], ["/admin/content", "Banners and testimonials"], ["/admin/studio-photos", "Studio photos"], ["/admin/settings", "Settings"], ["/admin/subscribers", "Newsletter"]];
 
 export function RequireAdmin({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();

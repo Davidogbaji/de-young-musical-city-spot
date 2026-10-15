@@ -5,15 +5,46 @@ export class ApiRequestError extends Error {
   constructor(message: string, public status: number, public details?: Record<string, string[]>) { super(message); }
 }
 
-export async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  let res: Response;
-  try {
-    res = await fetch(`${API_URL}/api${path}`, { ...init, credentials: "include", headers: { Accept: "application/json", ...(init?.body ? { "Content-Type": "application/json" } : {}) } });
-  } catch {
-    throw new ApiRequestError("Could not reach the server. Check your connection and try again.", 0);
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+const WAKING = new Set([502, 503, 504]);
+const WAKE_MESSAGE = "The shop server is waking up after a quiet period. Please try again in a minute.";
+let lastOk = 0;
+
+function rawFetch(path: string, init?: RequestInit) {
+  return fetch(`${API_URL}/api${path}`, { ...init, credentials: "include", headers: { Accept: "application/json", ...(init?.body && !(init.body instanceof FormData) ? { "Content-Type": "application/json" } : {}) } });
+}
+
+// Free hosting puts the server to sleep when idle, and the first request can fail with 502/503/504 while it wakes.
+// Keep trying (up to maxMs) instead of showing an error.
+async function fetchWithWake(path: string, init: RequestInit | undefined, maxMs: number): Promise<Response> {
+  const start = Date.now();
+  for (let attempt = 0; ; attempt++) {
+    try {
+      const res = await rawFetch(path, init);
+      if (!WAKING.has(res.status)) { lastOk = Date.now(); return res; }
+      if (Date.now() - start >= maxMs) return res;
+    } catch {
+      if (Date.now() - start >= maxMs) throw new ApiRequestError("Could not reach the server. Check your connection and try again.", 0);
+    }
+    await sleep(Math.min(2000 + attempt * 1000, 5000));
   }
+}
+
+// Before sending anything that changes data (login, orders, uploads), make sure the server is awake so the request is not lost.
+export async function ensureAwake(): Promise<void> {
+  if (Date.now() - lastOk < 4 * 60 * 1000) return;
+  try { await fetchWithWake("/health", undefined, 100_000); } catch { /* the real request will report the problem */ }
+}
+
+export async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const isRead = (init?.method ?? "GET").toUpperCase() === "GET";
+  if (!isRead) await ensureAwake();
+  const res = await fetchWithWake(path, init, isRead ? 100_000 : 0);
   const body = await res.json().catch(() => null);
-  if (!res.ok) throw new ApiRequestError(body?.error?.message ?? `Request failed (${res.status})`, res.status, body?.error?.details);
+  if (!res.ok) {
+    const message = WAKING.has(res.status) ? WAKE_MESSAGE : body?.error?.message ?? `Request failed (${res.status})`;
+    throw new ApiRequestError(message, res.status, body?.error?.details);
+  }
   return body as T;
 }
 

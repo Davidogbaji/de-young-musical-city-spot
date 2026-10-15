@@ -114,7 +114,7 @@ export default function Shop() {
               </select>
             </label>
           </div>
-          {loading && <div className="rounded-xl border border-dashed border-slate-300 p-12 text-center text-slate-500" role="status">Loading products…</div>}
+          {loading && <div className="rounded-xl border border-dashed border-slate-300 p-12 text-center text-slate-500" role="status">Loading products… The first visit after a quiet period can take up to a minute while the server wakes up.</div>}
           {error && <div className="rounded-xl border border-dashed border-red-300 p-12 text-center" role="alert"><p className="mb-3">We could not load products: {error}</p><button className="btn btn-blue" onClick={() => setRetry((r) => r + 1)}>Try again</button></div>}
           {!loading && !error && data && data.products.length === 0 && (
             <div className="rounded-xl border border-dashed border-slate-300 p-12 text-center text-slate-600"><p className="mb-3">No products match these filters.</p>{hasFilters && <button className="btn btn-blue" onClick={() => setSp(new URLSearchParams())}>Clear filters</button>}</div>

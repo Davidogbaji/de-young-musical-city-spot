@@ -1,6 +1,6 @@
 import { ApiError } from "./apiError";
 
-type Kind = "url" | "email" | "phone" | "text";
+type Kind = "url" | "email" | "phone" | "text" | "image";
 // The only settings staff can edit, with the longest value allowed for each.
 export const SETTINGS: Record<string, { max: number; kind: Kind }> = {
   whatsapp_number: { max: 20, kind: "phone" },
@@ -12,6 +12,9 @@ export const SETTINGS: Record<string, { max: number; kind: Kind }> = {
   x_url: { max: 300, kind: "url" }, youtube_url: { max: 300, kind: "url" },
   delivery_info: { max: 500, kind: "text" }, warranty_info: { max: 500, kind: "text" },
   about_text: { max: 5000, kind: "text" },
+  studio_photo_home: { max: 500, kind: "image" }, studio_photo_professional: { max: 500, kind: "image" }, studio_photo_podcast: { max: 500, kind: "image" },
+  studio_photo_church: { max: 500, kind: "image" }, studio_photo_dj: { max: 500, kind: "image" }, studio_photo_production: { max: 500, kind: "image" },
+  studio_photo_acoustic: { max: 500, kind: "image" },
   policy_delivery: { max: 8000, kind: "text" }, policy_privacy: { max: 8000, kind: "text" }, policy_terms: { max: 8000, kind: "text" },
 };
 
@@ -23,6 +26,7 @@ export function normalizeSetting(key: string, raw: string): string | null {
   if (v === "") return null;
   if (v.length > spec.max) throw new ApiError(400, `${key} is too long (maximum ${spec.max} characters).`);
   if (spec.kind === "url" && !/^https:\/\/\S+$/i.test(v)) throw new ApiError(400, `${key} must be a full web address starting with https://`);
+  if (spec.kind === "image" && !/^https?:\/\/\S+$/i.test(v)) throw new ApiError(400, "That is not a valid image address.");
   if (spec.kind === "email" && !/^\S+@\S+\.\S+$/.test(v)) throw new ApiError(400, "Enter a valid email address.");
   if (spec.kind === "phone") {
     const d = v.replace(/\D/g, "");

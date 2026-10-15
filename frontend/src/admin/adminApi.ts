@@ -1,5 +1,5 @@
 import { API_URL } from "../config";
-import { ApiRequestError, request, send } from "../services/api";
+import { ApiRequestError, ensureAwake, request, send } from "../services/api";
 import { Category, Brand, OrderSummary } from "../types";
 
 export interface AdminProduct {
@@ -63,6 +63,7 @@ export const admin = {
 };
 
 export async function uploadImage(file: File): Promise<string> {
+  await ensureAwake();
   const form = new FormData();
   form.append("image", file);
   let res: Response;

@@ -9,6 +9,7 @@ const Ctx = createContext<SettingsCtx>({ settings: {}, phone: BUSINESS.phoneDisp
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<Record<string, string> | null>(null);
   useEffect(() => {
+    fetch(`${API_URL}/api/health`).catch(() => {}); // starts waking a sleeping server straight away
     const ctl = new AbortController();
     const timer = setTimeout(() => ctl.abort(), 3000);
     fetch(`${API_URL}/api/settings`, { signal: ctl.signal })

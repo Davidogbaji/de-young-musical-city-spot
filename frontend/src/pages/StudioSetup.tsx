@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import Field, { aria } from "../components/Field";
+import ServicePhoto from "../components/ServicePhoto";
 import WhatsAppIcon from "../components/WhatsAppIcon";
 import { useSeo } from "../hooks/useSeo";
 import { api } from "../services/api";
@@ -16,6 +17,10 @@ const SERVICES: { type: string; text: string; gear: [string, string][] }[] = [
   { type: "Music production workstation", text: "Keyboards, controllers and monitoring for writing and producing music.", gear: [["Keyboards", "keyboards-and-digital-pianos"], ["Studio equipment", "studio-recording-equipment"], ["Headphones", "headphones-and-accessories"]] },
   { type: "Acoustic treatment and monitoring", text: "Advice on making your room sound accurate and choosing monitor speakers.", gear: [["Studio equipment", "studio-recording-equipment"]] },
 ];
+const PHOTO: Record<string, string> = {
+  "Home recording studio": "studio_photo_home", "Professional recording studio": "studio_photo_professional", "Podcast studio": "studio_photo_podcast", "Church sound system": "studio_photo_church",
+  "DJ booth and event setup": "studio_photo_dj", "Music production workstation": "studio_photo_production", "Acoustic treatment and monitoring": "studio_photo_acoustic",
+};
 const BUDGETS = ["Under ₦500,000", "₦500,000 to ₦1,000,000", "₦1,000,000 to ₦3,000,000", "₦3,000,000 to ₦10,000,000", "Above ₦10,000,000", "Not sure yet"];
 const EMPTY = { fullName: "", phone: "", email: "", studioType: "", budgetRange: "", location: "", requirements: "", contactMethod: "whatsapp", website: "" };
 
@@ -60,7 +65,7 @@ export default function StudioSetup() {
             const wa = whatsappLink(`Hello, I would like to enquire about: ${s.type}. Please provide information about available packages and pricing.`);
             return (
               <article key={s.type} className="flex flex-col gap-3 rounded-xl border border-slate-200 p-4">
-                <div className="placeholder-box aspect-[3/2] rounded-lg">Service Photo</div>
+                <ServicePhoto photoKey={PHOTO[s.type]} alt={s.type} />
                 <h2 className="text-lg font-extrabold">{s.type}</h2>
                 <p className="text-sm text-slate-700">{s.text}</p>
                 <p className="text-sm"><b>Suggested equipment:</b> {s.gear.map(([n, slug], i) => <span key={slug}>{i > 0 && ", "}<Link className="text-electric hover:underline" to={`/shop?category=${slug}`}>{n}</Link></span>)}</p>
